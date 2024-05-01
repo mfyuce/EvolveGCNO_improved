@@ -43,7 +43,7 @@ Build cuda_11.7.r11.7/compiler.31442593_0
 ## From Yaml
 
 ```bash
-conda env create --name envname --file=export.yml
+conda env create --name egcnoi_env --file=export.yaml
 conda activate egcnoi_env
 ```
 
@@ -100,3 +100,25 @@ conda install -c conda-forge ipympl
 # Model Tries
 
 `model_tries.py` and `model_tries.ipynb` contains manual tests that can be conducted for experiemntations.
+
+# NOTE
+
+```
+conda env export >  export.yaml
+rsync -aP ~/work/projects/v2x/graf/EvolveGCNO_improved ulak@10.20.4.52:/home/ulak/egcne/
+
+
+
+
+Installed package of scikit-learn can be accelerated using scikit-learn-intelex.
+    More details are available here: https://intel.github.io/scikit-learn-intelex
+
+    For example:
+
+        $ conda install scikit-learn-intelex
+        $ python -m sklearnex my_application.py
+
+
+
+
+```
