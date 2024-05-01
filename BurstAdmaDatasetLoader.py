@@ -53,14 +53,22 @@ class BurstAdmaDatasetLoader(object):
     def _get_targets_and_features(self):
 
         stacked_target = np.array(self._dataset["y"])
+        self._target_std= np.std(stacked_target, axis=0)
+        self._target_mean= np.mean(stacked_target, axis=0)
+        self._original_target= np.array(self._dataset["y"])
+
+
         stacked_features = np.array(self._dataset["features"])
         
-        standardized_features = (stacked_features - np.mean(stacked_features, axis=0)) / (
-            np.std(stacked_features, axis=0) + 10 ** -10
-        )
-        standardized_target = (stacked_target - np.mean(stacked_target, axis=0)) / (
-            np.std(stacked_target, axis=0) + 10 ** -10
-        )
+        #TODO: stacked_target!
+        
+        # standardized_features = (stacked_features - np.mean(stacked_features, axis=0)) / (
+        #     np.std(stacked_features, axis=0) + 10 ** -10
+        # )
+        # standardized_target = (stacked_target - self._target_mean) / (
+        #     self._target_std + 10 ** -10
+        # )
+        standardized_target = stacked_target / 10.0
         # self.features = [
         #     standardized_features[i : i + self.lags, :].T
         #     for i in range(self._dataset["time_periods"] - self.lags)
@@ -74,7 +82,10 @@ class BurstAdmaDatasetLoader(object):
             standardized_target[i + self.lags, :].T
             for i in range(self._dataset["time_periods"] - self.lags)
         ]
-
+    
+    def _get_real_targets(self,  dataset, targets):
+        return targets * (dataset._target_std+ 10 ** -10)  +  dataset._target_mean
+        
     def get_dataset(self, lags: int = 8) -> DynamicGraphTemporalSignal:
         """Returning the England COVID19 data iterator.
 

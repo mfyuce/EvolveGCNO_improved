@@ -73,13 +73,25 @@ from torch_geometric_temporal.signal import temporal_signal_split
 # device = torch.device('cuda')
 # dataset = dataset.to(device)
 train_dataset, test_dataset = temporal_signal_split(dataset, train_ratio=0.7)
+train_dataset._target_mean = loader._target_mean
+train_dataset._target_std = loader._target_std
+
+test_dataset._target_mean = loader._target_mean
+test_dataset._target_std = loader._target_std
 
 
+train_snapshots = int(0.7 * dataset.snapshot_count)
 
+test_dataset._original_target = loader._original_target
+test_dataset.test_starts_at = train_snapshots+1
+
+
+train_dataset._original_target = loader._original_target
+train_dataset.train_ends_at = train_snapshots
 
 import os 
 import torch
- 
+#https://stackoverflow.com/a/63922083/1290868
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 os.environ['OMP_NUM_THREADS'] = '1'
 os.environ['MKL_NUM_THREADS'] = '1'
@@ -92,13 +104,37 @@ ml_structure =ModelOps()
 # ml_structure.model = torch.load("../split1/saved_model_1681219225_1_4_0.7_11")
 # ml_structure.model = torch.load("../split1/saved_model_1681219225_5_2_0.7_2")
 # ml_structure.model = torch.load("../split1/lr_test_2/saved_model_1681301082_0.8_5_2_0.7_20")
-ml_structure.model = torch.load("model/saved_model_1681336502_0.007_5_1_0.7_4" )
+# ml_structure.model = torch.load("model/saved_model_1681336502_0.007_5_1_0.7_4" )
+
+
+ml_structure.model = torch.load("eval/saved_model_1714585417_0.0006_5_1_0.7_1" )
 base.SCORE_METHOD = "weighted"
 #with torch.autograd.profiler.profile(use_cuda=False) as prof:
-metrics = ml_structure.eval(test_dataset ,plot_model=True)
+#metrics = ml_structure.eval(test_dataset ,plot_model=True)
+
+import warnings
+warnings.filterwarnings('ignore') 
+
+all_metrics = []
+for score_type in [None]: #"weighted","micro", "macro", ,None (Per class perf), "samples", "binary"
+    base.SCORE_METHOD = score_type
+    print(f"Scoring with :{score_type}")
+    metrics = ml_structure.eval(test_dataset ,plot_model=False)
+    all_metrics.append({"score_type":score_type,"metrics":metrics});
+
+
+
+
+for t in all_metrics:
+    t0 = str(t["metrics"])
+    t1 = t["score_type"]
+    print(f"{t0} {t1}" )
+
+
+
 
 # ml_structure.plot()
-print(metrics)
+# print(metrics)
 # ml_structure.save_model_visuals(f"../split1/torchviz_eval_{ml_structure.time}_saved_model_1681301082_0.8_5_2_0.7_20",\
 #                                 "../split1/saved_model_1681301082_0.8_5_2_0.7_20",\
 #                                     ml_structure.snapshot_eval())

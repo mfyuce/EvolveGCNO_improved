@@ -100,3 +100,9 @@ conda install -c conda-forge ipympl
 # Model Tries
 
 `model_tries.py` and `model_tries.ipynb` contains manual tests that can be conducted for experiemntations.
+
+# NOTE
+
+```
+
+```

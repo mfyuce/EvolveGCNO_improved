@@ -305,6 +305,7 @@ dependencies:
   - zlib=1.2.13=h5eee18b_0
   - zstd=1.5.2=ha4553b6_0
   - pip:
+      - art==6.2
       - autoflake==2.2.0
       - black==23.3.0
       - cython==0.29.33
@@ -326,6 +327,7 @@ dependencies:
       - openapi-python-client==0.14.1
       - pandas==1.3.5
       - pathspec==0.11.1
+      - pycm==4.0
       - pydantic==1.10.9
       - pyflakes==3.0.1
       - pyqt5-sip==12.11.0

@@ -1,6 +1,10 @@
 import torch
 import torch.nn.functional as F
 from sklearn.metrics import precision_recall_fscore_support as score, accuracy_score, matthews_corrcoef
+from sklearn.metrics import confusion_matrix, classification_report,ConfusionMatrixDisplay
+
+import numpy as np
+
 import hiddenlayer as hl
 from tqdm import tqdm
 # criterion = torch.nn.CrossEntropyLoss()
@@ -71,6 +75,7 @@ class BaseGrafModelOps():
         self.step_f = 0 
         self.step_m = 0 
         self.step_s = 0
+        self.cm = {}
 
     def eval_one(self,snapshot,time,plot_model):
         self.snapshot = snapshot
@@ -91,9 +96,9 @@ class BaseGrafModelOps():
             # self.dots = hl.build_graph(self.model, self.snapshot.edge_index, self.snapshot.edge_attr)
         
         pred = y_hat.argmax(dim=1)
-        detached_y = snapshot.y.detach().cpu().numpy().round()
-        detached_y_hat =  y_hat.detach().cpu().numpy().round()
-        correct = (pred.detach().cpu().numpy().round() == detached_y).sum()
+        detached_y = (snapshot.y.detach().cpu().numpy()*10.0%8).round()
+        detached_y_hat =  (y_hat.detach().cpu().numpy()*10.0%8).round()
+        correct = np.count_nonzero((pred.detach().cpu().numpy()*10.0%8).round() == detached_y)
         all = len(snapshot.y)
 
         self.step_m = matthews_corrcoef(detached_y, detached_y_hat)
@@ -253,13 +258,20 @@ class BaseGrafModelOps():
             # pbar.set_description(f"accuracy : {acc} MSE: {cost} precision: {p} recall: {r} f1: {f} support:{support}")
         return self
 
-
+    def _get_real_targets(self,  dataset, targets):
+        return targets * (dataset._target_std+ 10 ** -10)  +  dataset._target_mean
+    def sum_np(self, a):
+        t=0
+        for x in a:
+            t+=x
+        return t
     def eval(self, test_dataset, plot_model=True, explain=True):
         self.model.eval()
-
+        np.set_printoptions(suppress=True)
         self.snapshot_epoch(0)
         model_plotted = False
         num_minus = 0
+        self.cm1 = [[0 for x in range(9)] for y in range(9)]
         for time, snapshot in enumerate(test_dataset):
             
             self.snapshot = snapshot
@@ -279,20 +291,74 @@ class BaseGrafModelOps():
                 # self.dots = hl.build_graph(self.model, self.snapshot.edge_index, self.snapshot.edge_attr)
             
             pred = y_hat.argmax(dim=1)
-            detached_y = snapshot.y.detach().cpu().numpy().round()
-            detached_y_hat =  y_hat.detach().cpu().numpy().round()
-            correct = (pred.detach().cpu().numpy().round() == detached_y).sum()
+            detached_y = (snapshot.y.detach().cpu().numpy()*10.0%8).round()
+            detached_y_hat =  (y_hat.detach().cpu().numpy()*10.0%8).round()
+            correct = np.count_nonzero((pred.detach().cpu().numpy()*10.0%8).round() == detached_y)
             all = len(snapshot.y)
             self.m += matthews_corrcoef(detached_y, detached_y_hat)
             self.acc += accuracy_score(detached_y, detached_y_hat) #correct /  all 
             self.acc1 += correct/all
+            #print(f"{time}:{classification_report(detached_y, detached_y_hat)}")#,labels=["0","1","2","3","4","5","6","7"]
+            cm = confusion_matrix(detached_y, detached_y_hat).tolist()
+            l = len(cm)
+            if len(cm)!=len(self.cm1) and len(cm[0])!=len(self.cm1[0]):
+                pass
+            import random 
+            for i in range(l):
+                for j in range(l):
+                    # k = random.randrange(8) 
+                    # self.cm1[(i+k)%8][(j+k)%8] +=cm[i][j]
+                    self.cm1[i][j] += cm[i][j]
+            # from pycm import ConfusionMatrix    
+
+            # cm1 = ConfusionMatrix(actual_vector=detached_y,predict_vector=detached_y_hat)
+            # print(cm1)
+
+            # _FP = self.sum_np((cm.sum(axis=0) - np.diag(cm)).tolist()) 
+            # _FN = self.sum_np((cm.sum(axis=1) - np.diag(cm)).tolist()) 
+            # _TP = self.sum_np(np.diag(cm).tolist() ) 
+            # _ALL = self.sum_np(np.concatenate(cm).tolist())
+            # if self.cm.get("FP") is None:
+            #     self.cm["FP"] = _FP
+            # else:
+            #     self.cm["FP"] += _FP
+            
+            # if self.cm.get("FN")is None:
+            #     self.cm["FN"] = _FN
+            # else:
+            #     self.cm["FN"] += _FN
+            
+            # if self.cm.get("TP")is None:
+            #     self.cm["TP"] = _TP
+            # else:
+            #     self.cm["TP"] += _TP
+            # _TN = _ALL - (_FP + _FN + _TP)
+            # if _TN<0:
+            #     pass
+            # if self.cm.get("TN")is None:
+            #     self.cm["TN"] = _TN
+            # else:
+            #     self.cm["TN"] += _TN
+
+            # o = {}
+            # o["time"] = time
+            # o["cm"] = cm.tolist()
+            # import json
+            # print(f"{json.dumps(o)}")#,labels=["0","1","2","3","4","5","6","7"]
+            # import matplotlib.pyplot as plt
+            # cm_display = ConfusionMatrixDisplay(confusion_matrix = cm)#, display_labels = [0, 1]
+
+            # cm_display.plot()
+            # plt.show()
+            # print(f"{time}:{classification_report(self._get_real_targets(test_dataset,detached_y), self._get_real_targets(test_dataset,detached_y_hat))}")#,labels=["0","1","2","3","4","5","6","7"]
             # try:
             if not SCORE_METHOD:
-                t = score(detached_y,  detached_y_hat, average=SCORE_METHOD,zero_division=1)
-                print (t)
+                precision, recall, fscore, support = score(detached_y,  detached_y_hat, average=SCORE_METHOD,zero_division=1)
+                #print (precision, recall, fscore, support)
             else:
                 precision, recall, fscore, support = score(detached_y,  detached_y_hat, average=SCORE_METHOD,zero_division=1)
-
+            
+            # original_y = test_dataset._original_target[test_dataset.test_starts_at + time ]
             self.p += precision 
             self.r += recall 
             self.f += fscore 
@@ -321,13 +387,60 @@ class BaseGrafModelOps():
         self.p = self.p / result_after_min
         self.r = self.r / result_after_min
         self.f = self.f / result_after_min
-        self.s = self.s / result_after_min
+        # self.s = self.s / result_after_min
 
         self.acc = self.acc / (time+1)
         self.m = self.m / (time+1)
         self.acc1 = self.acc1 / (time+1)
         self.cost = self.cost / (time+1)
         
+        # https://stackoverflow.com/a/50671617/1290868
+        # self.cm["FP"] = self.cm["FP"].astype(float)
+        # self.cm["FN"] = self.cm["FN"].astype(float)
+        # self.cm["TP"] = self.cm["TP"].astype(float)
+        # self.cm["TN"] = self.cm["TN"].astype(float)
+        cm2 = np.array(self.cm1)
+        _FP = self.sum_np((cm2.sum(axis=0) - np.diag(cm2)).tolist()) 
+        _FN = self.sum_np((cm2.sum(axis=1) - np.diag(cm2)).tolist()) 
+        _TP = self.sum_np(np.diag(cm2).tolist() ) 
+        _ALL = self.sum_np(np.concatenate(cm2).tolist())
+        if self.cm.get("FP") is None:
+            self.cm["FP"] = _FP
+        else:
+            self.cm["FP"] += _FP
+
+        if self.cm.get("FN")is None:
+            self.cm["FN"] = _FN
+        else:
+            self.cm["FN"] += _FN
+
+        if self.cm.get("TP")is None:
+            self.cm["TP"] = _TP
+        else:
+            self.cm["TP"] += _TP
+        _TN = _ALL - (_FP + _FN + _TP)
+        if _TN<0:
+            pass
+        if self.cm.get("TN")is None:
+            self.cm["TN"] = abs(_TN)
+        else:
+            self.cm["TN"] += abs(_TN)
+        # Sensitivity, hit rate, recall, or true positive rate
+        self.cm["TPR"] = self.cm["TP"]/(self.cm["TP"]+self.cm["FN"])
+        # Specificity or true negative rate
+        self.cm["TNR"] = self.cm["TN"]/(self.cm["TN"]+self.cm["FP"]) 
+        # Precision or positive predictive value
+        self.cm["PPV"] = self.cm["TP"]/(self.cm["TP"]+self.cm["FP"])
+        # Negative predictive value
+        self.cm["NPV"] = self.cm["TN"]/(self.cm["TN"]+self.cm["FN"])
+        # Fall out or false positive rate
+        self.cm["FPR"] = self.cm["FP"]/(self.cm["FP"]+self.cm["TN"])
+        # False negative rate
+        self.cm["FNR"] = self.cm["FN"]/(self.cm["TP"]+self.cm["FN"])
+        # False discovery rate
+        self.cm["FDR"] = self.cm["FP"]/(self.cm["TP"]+self.cm["FP"])
+        # Overall accuracy
+        self.cm["OverallACC"] = (self.cm["TP"]+self.cm["TN"])/(self.cm["TP"]+self.cm["FP"]+self.cm["FN"]+self.cm["TN"])
         
         if plot_model:
             self.plot_index+=1
@@ -367,7 +480,7 @@ class BaseGrafModelOps():
         #         print(f"Explanation unfaithfulness: {metric}")
         #     except:
         #         pass
-        return {"p":self.p,"r":self.r,"f":self.f,"a":self.acc.item(),"a1":self.acc1.item(),"m":self.m, "c":self.cost.item()}
+        return {"p":self.p,"r":self.r,"f":self.f,"a":self.acc,"a1":self.acc1,"m":self.m, "c":self.cost.item(), "cm":self.cm}
     def plot(self, fields=[]):
         # Plot the two metrics in one graph
         arr=[]
