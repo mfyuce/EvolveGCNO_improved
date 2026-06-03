@@ -164,3 +164,37 @@ runs/**
 /imported_data/**
 model/saved_model_1681336502_0.007_5_1_0
 data/**
+# --- honest re-evaluation: keep public repo to source only ---
+# run logs / collected arrays / build artifacts
+*.out
+*.err
+*.npz
+ceiling_run.log
+*.aux
+*.bbl
+*.blg
+*.spl
+*.synctex.gz
+# generated figures (regenerate with make_figures.py)
+fig_*.pdf
+# experiment model checkpoints / eval dumps
+model/*.pt
+model/eval_metrics*.csv
+model/saved_log*.pkl
+# paper manuscript drafts (live in the academic submission folders, not the code repo)
+paper_r4.*
+# internal / strategy documents (not for public release)
+CORRIGENDUM_DRAFT.md
+PAPER_REWRITE_PLAN.md
+TODO.md
+# IDE / misc dumps
+.vscode/
+rt.txt
+rt_all.txt
+suite_s*.txt
+suite_full_*.log
+results_honest.tex
+# honest-reevaluation findings/docs — keep LOCAL for now (add later)
+FINAL_METRICS.md
+COMPARISON_vs_competitors.md
+README_honest_section.local.md

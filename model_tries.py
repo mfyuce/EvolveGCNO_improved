@@ -95,10 +95,20 @@ ml_structure =ModelOps()
 ml_structure.model = torch.load("model/saved_model_1681336502_0.007_5_1_0.7_4" )
 base.SCORE_METHOD = "weighted"
 #with torch.autograd.profiler.profile(use_cuda=False) as prof:
-metrics = ml_structure.eval(test_dataset ,plot_model=True)
+# metrics = ml_structure.eval(test_dataset ,plot_model=True)
 
 # ml_structure.plot()
-print(metrics)
+# print(metrics)
 # ml_structure.save_model_visuals(f"../split1/torchviz_eval_{ml_structure.time}_saved_model_1681301082_0.8_5_2_0.7_20",\
 #                                 "../split1/saved_model_1681301082_0.8_5_2_0.7_20",\
 #                                     ml_structure.snapshot_eval())
+
+for i in range(100):
+    with torch.autograd.profiler.profile(use_cuda=False) as prof:
+
+        metrics = ml_structure.eval(test_dataset ,plot_model=True)
+
+    print(prof.key_averages().table(sort_by="self_cpu_time_total"))
+
+
+

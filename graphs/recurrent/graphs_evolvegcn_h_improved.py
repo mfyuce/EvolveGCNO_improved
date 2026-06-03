@@ -25,28 +25,23 @@ class RecurrentGCN1(torch.nn.Module):
         if scriptable:
             self.conv3 = self.conv3.jittable()
 
-        self.linear = torch.nn.Linear(2, 1)
+        # 2-class logits (benign / malicious) — replaces the old scalar regression head.
+        self.linear = torch.nn.Linear(2, 2)
         # if scriptable:
         #     self.linear = self.linear.jittable()
 
     def forward(self, x, edge_index, edge_weight):
         h = self.recurrent(x, edge_index, edge_weight)
 
-
-        h = self.conv1(h, edge_index)
+        h = self.conv1(h, edge_index, edge_weight)
         h = h.tanh()
-        h = self.conv2(h, edge_index)
+        h = self.conv2(h, edge_index, edge_weight)
         h = h.tanh()
         h = F.dropout(h, p=0.5, training=self.training)
-        h = self.conv3(h, edge_index)
+        h = self.conv3(h, edge_index, edge_weight)
         out = h.tanh()  # Final GNN embedding space.
 
-
-
-        # h = F.relu(h)
-        # h = F.relu6(h)
-        # h = F.selu(h)
-        h = self.linear(h)
+        h = self.linear(out)   # (N, 2) — classification logits
         return h, out
 
 class RecurrentGCN(torch.nn.Module):
@@ -75,9 +70,7 @@ class ModelOps(gb.BaseGrafModelOps):
     
     def train(self, loader,train_dataset, num_train=1,plot_model=False, calc_perf=True, scriptable=False):
         number_of_nodes=len(loader._dataset["node_labels"])
-        # return super().train(loader,train_dataset, RecurrentGCN1(node_features = 5, node_count = number_of_nodes),
-        #                           num_train=num_train,plot_model=plot_model, calc_perf=calc_perf )
-        model = RecurrentGCN1(node_features = loader.lags, node_count = number_of_nodes, scriptable=scriptable )
+        model = RecurrentGCN1(node_features=loader.n_node_features, node_count=number_of_nodes, scriptable=scriptable)
         
         if scriptable:
             model = torch.jit.script(model)

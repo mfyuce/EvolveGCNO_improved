@@ -17,10 +17,13 @@ class BurstAdmaDatasetLoader(object):
     `"Transfer Graph Neural Networks for Pandemic Forecasting." <https://arxiv.org/abs/2009.08388>`_
     """
 
-    def __init__(self, num_edges=0, negative_edge=False, features_as_self_edge=False, dataset=None):
+    def __init__(self, num_edges=0, negative_edge=False, features_as_self_edge=False, dataset=None, binary=True):
         self.num_edges = num_edges
         self.negative_edge = negative_edge
         self.features_as_self_edge = features_as_self_edge
+        # binary=True  -> 0 benign / 1 any-attacker (2-class node classification)
+        # binary=False -> raw 8-class attacker type (0..7) kept as-is
+        self.binary = binary
         if dataset is None:
             self._read_web_data()
         else :
@@ -52,28 +55,46 @@ class BurstAdmaDatasetLoader(object):
 
     def _get_targets_and_features(self):
 
-        stacked_target = np.array(self._dataset["y"])
-        stacked_features = np.array(self._dataset["features"])
-        
-        standardized_features = (stacked_features - np.mean(stacked_features, axis=0)) / (
-            np.std(stacked_features, axis=0) + 10 ** -10
-        )
-        standardized_target = (stacked_target - np.mean(stacked_target, axis=0)) / (
-            np.std(stacked_target, axis=0) + 10 ** -10
-        )
-        # self.features = [
-        #     standardized_features[i : i + self.lags, :].T
-        #     for i in range(self._dataset["time_periods"] - self.lags)
-        # ]
+        stacked_target   = np.array(self._dataset["y"])        # (T, N)
+        stacked_features = np.array(self._dataset["features"]) # (T, N, F) or (T, N)
 
-        self.features = [
-            standardized_target[i : i + self.lags, :].T
-            for i in range(self._dataset["time_periods"] - self.lags)
-        ]
+        # Standardize features along the time axis; works for both 2-D and 3-D arrays.
+        f_mean = np.mean(stacked_features, axis=0, keepdims=True)
+        f_std  = np.std(stacked_features,  axis=0, keepdims=True)
+        standardized_features = (stacked_features - f_mean) / (f_std + 1e-10)
+
+        if stacked_features.ndim == 3:
+            # Multi-feature case: (T, N, F) — one (N, F) slice per snapshot.
+            # Temporal context is handled by the EvolveGCN-H GRU, so lags are not
+            # needed here; using the current-step features avoids COVID-template leakage.
+            self.features = [
+                standardized_features[i, :, :]          # (N, F)
+                for i in range(self._dataset["time_periods"] - self.lags)
+            ]
+        else:
+            # Scalar feature case (COVID-style): slide a window of length `lags`.
+            self.features = [
+                standardized_features[i : i + self.lags, :].T   # (N, lags)
+                for i in range(self._dataset["time_periods"] - self.lags)
+            ]
+
+        # Classification targets (int64 so CrossEntropyLoss consumes them directly).
+        #   binary=True  -> 0 benign / 1 any-attacker
+        #   binary=False -> raw 8-class attacker type (0..7)
+        if self.binary:
+            label_array = (stacked_target != 0).astype(np.int64)
+        else:
+            label_array = stacked_target.astype(np.int64)
         self.targets = [
-            standardized_target[i + self.lags, :].T
+            label_array[i + self.lags, :]               # (N,) int64
             for i in range(self._dataset["time_periods"] - self.lags)
         ]
+
+    @property
+    def n_node_features(self) -> int:
+        """Number of kinematic features per node (F in the (T, N, F) array)."""
+        f = np.array(self._dataset["features"])
+        return int(f.shape[-1]) if f.ndim == 3 else 1
 
     def get_dataset(self, lags: int = 8) -> DynamicGraphTemporalSignal:
         """Returning the England COVID19 data iterator.

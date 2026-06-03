@@ -40,10 +40,22 @@ Build cuda_11.7.r11.7/compiler.31442593_0
 
 ```
 
+## Installing `conda`
+
+From: https://docs.anaconda.com/miniconda/
+```bash
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+
+```
+Do not forget to update .bashrc
+
 ## From Yaml
 
 ```bash
-conda env create --name envname --file=export.yml
+conda env create --name egcnoi_env --file=export.yaml
 conda activate egcnoi_env
 ```
 
