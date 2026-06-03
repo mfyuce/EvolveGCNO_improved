@@ -208,3 +208,7 @@ compare_metrics.py
 make_figures.py
 run_ceiling.py
 run_experiments.py
+
+# session docs — local only
+CLAUDE.md
+DONE.md
