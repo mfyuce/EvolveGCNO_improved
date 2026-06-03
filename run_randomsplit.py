@@ -1,12 +1,4 @@
-"""Competitors' OWN setup: random (node,timestep) 70/30 split (not vehicle-disjoint).
-
-Classical MBD papers split tabular BSM rows randomly, so the same vehicle is in
-train and test (different timesteps) — an EASY setup. This evaluates our models
-the same way and reports BOTH weighted (their metric) and MACRO (+MCC), so we can
-see whether we match the competitors' ~99% on equal footing, and what macro does.
-
-Run:  python run_randomsplit.py <rf|gconvgru|static> [seed]
-"""
+"""Evaluation under different split protocols (random / temporal) reporting weighted and macro metrics."""
 
 import os, sys, time, warnings
 warnings.filterwarnings("ignore")

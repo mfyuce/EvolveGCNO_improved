@@ -1,15 +1,4 @@
-"""Does the STANDARD (non-'improved') EvolveGCN work?
-
-The paper's EvolveGCN-H-*improved* fails (frozen recurrence via .data + TopK->5
-bottleneck + over-smoothing). The standard library models differ:
-  - EvolveGCNO: LIVE recurrence (evolves weight from previous weight each step),
-    NO node-pooling bottleneck.
-  - EvolveGCNH: live recurrence WITH pooling (num_of_nodes).
-This tests them in the honest pipeline (vehicle-disjoint, raw5, focal, in-order
-windowed truncated BPTT with per-window weight reset), same head as the others.
-
-Run:  python run_stdevolve.py <evolveo|evolveh> [seed]
-"""
+"""Standard EvolveGCN-O / EvolveGCN-H baselines (torch-geometric-temporal) on the vehicle-disjoint split."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

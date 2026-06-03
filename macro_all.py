@@ -1,8 +1,4 @@
-"""Full MACRO metric suite (macro-P, macro-R, macro-F1) + weighted + acc + MCC
-+ per-class F1, for every key model on the SAME vehicle-disjoint split.
-
-Run:  python macro_all.py <gconvgru|tgcn|static_raw|static_eng|evolve> [seed]
-"""
+"""Report the full macro metric suite (macro precision/recall/F1, accuracy, MCC, per-class F1) for each model on the vehicle-disjoint split."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

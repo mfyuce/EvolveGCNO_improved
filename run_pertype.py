@@ -1,13 +1,4 @@
-"""Where does the temporal advantage come from? Per-attack-type recall.
-
-Trains GConvGRU (node-state temporal) and static GCN on the SAME vehicle-disjoint
-split (raw5, focal), then breaks down detection recall by the TRUE attack type
-(0..7) on unseen test vehicles. Hypothesis: the temporal model's edge concentrates
-on temporally-defined attacks (1=Const Random Position / frozen, 4=Const Random
-Speed) that need history to spot, vs per-frame types.
-
-Run:  python run_pertype.py [seed]
-"""
+"""Per-attack-type recall breakdown comparing a node-state ST-GNN with a Random Forest on the vehicle-disjoint split."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

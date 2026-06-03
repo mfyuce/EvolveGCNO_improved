@@ -1,16 +1,4 @@
-"""Improvement ablation: optimization regime x loss, on the winning static GCN.
-
-Current best honest = static GCN, MCC 0.52 (full-batch, CE). ROC-AUC is already
-0.99 (ranking near-ceiling), so the headroom is at the OPERATING POINT. Two
-cheap levers, ablated:
-
-  optmode : fullbatch  (reference: 1 optimizer step / epoch over all snapshots)
-            persnapshot (1 step PER snapshot, snapshots shuffled each epoch =>
-                         ~699x more gradient updates per epoch)
-  loss    : ce | focal (gamma=2, downweights easy benign nodes)
-
-Run:  python run_improve.py <model gcn|mlp> <optmode> <loss> [epochs] [hidden]
-"""
+"""Optimization and loss ablation (full-batch vs per-snapshot; cross-entropy vs focal loss)."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

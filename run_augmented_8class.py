@@ -1,11 +1,4 @@
-"""8-class with the WINNING recipe: augmented features + focal + per-snapshot.
-
-Does the multiclass task (paper's real 0..7 label space) also recover, the way
-binary did (MCC 0.18 -> 0.96)?  Earlier 8-class (raw 5 feat, CE-ish) was
-macro-F1 0.21.
-
-Run:  python run_augmented_8class.py [epochs] [hidden]
-"""
+"""8-class attacker-type run using augmented consistency features."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

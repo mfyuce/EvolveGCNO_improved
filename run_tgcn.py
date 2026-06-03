@@ -1,19 +1,4 @@
-"""Node-state recurrent GNN (TGCN / GConvGRU) — the architecturally-RIGHT
-temporal model, given a fair chance. Unlike EvolveGCN-H (evolves a shared
-weight matrix + TopK->5 bottleneck), these carry a PER-NODE hidden state h_i(t)
-that evolves over time = exactly per-vehicle trajectory dynamics.
-
-Key difference from the earlier (failed) EvolveGCN tests:
-  - STATEFUL sequential processing: hidden state H carried across the whole
-    in-order sequence (detached per window for truncated BPTT, NOT zero-reset),
-    so long-memory temporal patterns can form.
-  - Per-node recurrence (no pooling bottleneck), raw 5 features, focal loss.
-
-Compare vs static GCN (raw5): temporal 0.878 / vehicle-disjoint ~0.63.
-If TGCN/GConvGRU beats static, temporal finally earns its place.
-
-Run:  python run_tgcn.py <tgcn|gconvgru> <temporal|disjoint> [epochs] [window] [seed]
-"""
+"""Node-state recurrent spatio-temporal GNN (TGCN / GConvGRU) with stateful truncated BPTT."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

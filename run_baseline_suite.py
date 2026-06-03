@@ -1,9 +1,4 @@
-"""Literature-style baseline suite — the classical algorithms MBD/V2X papers
-tabulate, all on OUR honest vehicle-disjoint split (engineered features),
-reported with the same honest metrics (macro-F1, MCC, accuracy, ROC-AUC).
-
-Run:  python run_baseline_suite.py [seed]
-"""
+"""Classical machine-learning baseline suite (logistic regression, SVM, naive Bayes, KNN, tree ensembles, MLP) on the vehicle-disjoint split."""
 
 import os, sys, time, warnings
 warnings.filterwarnings("ignore")

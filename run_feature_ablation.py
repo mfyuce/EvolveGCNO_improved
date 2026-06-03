@@ -1,13 +1,4 @@
-"""Permutation feature importance on a vehicle-disjoint static-GCN (full 10 feat).
-
-Trains the winning recipe vehicle-disjoint (unseen attackers), then for each
-feature shuffles that column among active TEST nodes (per snapshot) and measures
-the drop in ROC-AUC / MCC. Big drop => the model relies on that feature to
-GENERALIZE. Directly answers "which features matter" and "do the engineered
-consistency features carry the generalization".
-
-Run:  python run_feature_ablation.py [seed]
-"""
+"""Permutation feature-importance on a vehicle-disjoint model."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

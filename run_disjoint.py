@@ -1,18 +1,4 @@
-"""Vehicle-disjoint validation of the strong honest recipe.
-
-The headline MCC 0.958 used a TEMPORAL split (first 70% of timesteps -> train).
-Since labels are constant per vehicle, an attacker in train reappears in test
-with the same label, so that split measures "detect an ONGOING attacker", and
-position features could let the model memorize vehicle identity.
-
-This script splits by VEHICLE (stratified by label): train and test vehicles
-are disjoint, all timesteps used. It measures "detect a NEVER-SEEN attacker" —
-the stronger, more honest claim. Graph message-passing still spans all nodes;
-only the loss/eval are masked to the respective vehicle set.
-
-Recipe: static GCN, focal loss, 10 augmented features (the winner).
-Run:  python run_disjoint.py [epochs] [hidden] [model gcn|mlp]
-"""
+"""Vehicle-disjoint evaluation (train/test vehicles disjoint, i.e. unseen attackers) over multiple seeds, with an optional position-independent feature subset."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

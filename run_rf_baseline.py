@@ -1,14 +1,4 @@
-"""Apples-to-apples: the competitors' paradigm (classical ensemble / Random
-Forest, e.g. ref318 Anyanwu RF, ref317 ensemble) re-evaluated on OUR honest
-vehicle-disjoint split — so a fair comparison to the ST-GNN.
-
-The cited competitors report ~99% accuracy / weighted-F1 on BurST-ADMA but on
-random splits, micro/weighted metrics, and (ref317) using the Node-ID field.
-Here a Random Forest is trained on per-node features (no ID, no leakage) and
-tested on UNSEEN vehicles, reported with macro-F1 / MCC like our ST-GNN.
-
-Run:  python run_rf_baseline.py <raw|eng> [seed]
-"""
+"""Random Forest baseline on per-node features, vehicle-disjoint split."""
 
 import os, sys, time
 import numpy as np

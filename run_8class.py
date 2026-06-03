@@ -1,12 +1,4 @@
-"""8-class honest run (paper's actual label space: 0..7 attacker types).
-
-Uses the winning desat architecture (wider ReLU head, no final tanh, original
-non-evolving recurrent core) but with an 8-way classifier and multiclass
-metrics. Shows the honest difficulty of the paper's real (8-class) task, where
-class 0 (benign + inactive-vehicle padding) is ~98.9% of all node-steps.
-
-Run:  python run_8class.py [epochs]
-"""
+"""8-class attacker-type classification run (labels 0..7)."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

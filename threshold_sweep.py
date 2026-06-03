@@ -1,14 +1,4 @@
-"""Threshold sweep + separability diagnostics on the honest ceiling model.
-
-Answers: is the low MCC (0.19) a decision-threshold artifact, or do the
-kinematic features simply fail to separate benign vs malicious?
-
-- ROC-AUC / PR-AUC are threshold-INDEPENDENT: they measure how well the
-  model's malicious-probability ranks true malicious above benign. This is
-  the real "ceiling" signal. (PR-AUC baseline = malicious base rate.)
-- The threshold table shows the best achievable MCC / macro-F1 / malicious-F1
-  by moving the decision cutoff on softmax(logits)[:,1].
-"""
+"""Decision-threshold sweep and ROC/PR separability diagnostics."""
 
 import os
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

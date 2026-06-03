@@ -198,3 +198,13 @@ results_honest.tex
 FINAL_METRICS.md
 COMPARISON_vs_competitors.md
 README_honest_section.local.md
+
+# data-regeneration helper (kept local)
+mendeley_regen.py
+mendeley_regen.out
+
+# audit/comparison scripts — keep local for now
+compare_metrics.py
+make_figures.py
+run_ceiling.py
+run_experiments.py

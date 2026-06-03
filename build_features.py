@@ -1,20 +1,4 @@
-"""Build augmented node features that target misbehavior SEMANTICS.
-
-The raw 5 features [x, y, heading, speed, accel] are instantaneous absolute
-values. Most attacks are CONSISTENCY violations across time:
-  - Constant Random Position : claimed speed > 0 but position frozen
-                               (||Δpos|| ~ 0 while speed high)
-  - Position offset          : implausible position jumps
-  - Speed offset             : claimed speed vs implied (from Δpos)
-  - Reversed heading         : claimed heading vs motion direction (~180 off)
-  - Accel inconsistency      : claimed accel vs Δspeed/Δt
-
-We compute per-vehicle temporal deltas (dt=1, labels constant per vehicle) and
-emit a (T, N, K) array aligned to the SAME node ordering / timestep layout as
-the JSON, so it can drop into the existing edge/label structure.
-
-Output: data/features_augmented.npy  (T, N, 10)  +  data/features_augmented_cols.txt
-"""
+"""Build augmented per-node features (kinematics plus consistency/derivative features) and save them as a .npy array."""
 
 import numpy as np
 import pandas as pd

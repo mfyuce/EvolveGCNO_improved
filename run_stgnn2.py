@@ -1,21 +1,4 @@
-"""ST-GNN repair (residual skip) + vehicle-disjoint validation.
-
-modes:
-  static     : x -> head (no core)
-  evolve     : x -> EvolveGCN-H core (BPTT) -> head
-  evolve_res : x -> x + core(x) (RESIDUAL skip around core) -> head
-               => bypasses the core's over-smoothing; if temporal is useless the
-                  model can drive core(x)->0 and recover static performance.
-
-splits:
-  temporal : first 70% timesteps -> train (paper protocol)
-  disjoint : stratified vehicle split (unseen attackers); loss/eval masked to
-             train/test vehicles, trained on first-70%-snapshots in order.
-
-All: raw 5 features, focal, in-order windowed truncated BPTT, de-saturated head.
-
-Run:  python run_stgnn2.py <static|evolve|evolve_res> <temporal|disjoint> [epochs] [window] [seed]
-"""
+"""Spatio-temporal GNN with a residual recurrent core and vehicle-disjoint / temporal split options."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

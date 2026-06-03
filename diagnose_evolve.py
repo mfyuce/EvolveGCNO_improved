@@ -1,21 +1,4 @@
-"""Localize WHY the EvolveGCN-H core degrades vs a plain static GCN.
-
-The core sits before the GCN head:
-  x -> TopKPooling(->5 nodes) -> GRU -> 5x5 weight W_new -> conv_layer(W_new) -> head
-A static GCN skips the core: x -> head.
-
-Three variants isolate the cause (all: raw 5 feat, focal, in-order windows, temporal split):
-  static     : skip core (baseline)
-  core_fixed : keep the pre-conv transform but W = initial_weight (CONSTANT, no GRU)
-  core_gru   : full EvolveGCN (W from GRU over pooled nodes), + logs W jumpiness
-
-Reading:
-  core_fixed ~ static  => the GRU/temporal evolution is what hurts
-  core_fixed < static  => the pooling/pre-conv bottleneck itself hurts
-  large W jumpiness     => the data-dependent conv weight is non-stationary -> variance
-
-Run:  python diagnose_evolve.py <static|core_fixed|core_gru> [epochs] [window]
-"""
+"""Diagnostic comparing recurrent-core variants (no core / fixed weight / GRU-updated weight) of the EvolveGCN-H cell."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

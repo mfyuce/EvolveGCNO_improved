@@ -1,8 +1,4 @@
-"""Train key models on the vehicle-disjoint split (seed 3) and save test
-(probability, label) arrays for ROC curves.  Run one model per call.
-
-Run:  python collect_roc.py <gconvgru|static|evolveo|rf>
-"""
+"""Train a selected model on the vehicle-disjoint split and save test (probability, label) arrays for ROC analysis."""
 import os, sys, warnings
 warnings.filterwarnings("ignore")
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

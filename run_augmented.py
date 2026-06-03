@@ -1,11 +1,4 @@
-"""Combine the winning recipe (per-snapshot + focal) with engineered features.
-
-Same edges/labels/indexing as the loader; only the node-feature matrix is
-swapped for the 10-dim augmented set (raw 5 + consistency features from
-build_features.py). Static GCN, per-snapshot Adam, focal loss.
-
-Run:  python run_augmented.py <model gcn|mlp> [epochs] [hidden]
-"""
+"""Train the detector with augmented consistency features using per-snapshot focal-loss training."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

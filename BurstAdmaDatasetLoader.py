@@ -66,7 +66,7 @@ class BurstAdmaDatasetLoader(object):
         if stacked_features.ndim == 3:
             # Multi-feature case: (T, N, F) — one (N, F) slice per snapshot.
             # Temporal context is handled by the EvolveGCN-H GRU, so lags are not
-            # needed here; using the current-step features avoids COVID-template leakage.
+            # needed here; the current-step features are used directly.
             self.features = [
                 standardized_features[i, :, :]          # (N, F)
                 for i in range(self._dataset["time_periods"] - self.lags)

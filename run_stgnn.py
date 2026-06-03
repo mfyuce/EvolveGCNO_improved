@@ -1,23 +1,4 @@
-"""Fair test of the spatio-temporal GNN: EvolveGCN-H trained PROPERLY.
-
-The earlier "temporal doesn't help" verdict was unfair to the temporal model:
-snapshots were shuffled (anti-temporal) and hand-engineered delta features were
-fed (pre-solving the temporal part). This script gives the ST-GNN a fair chance:
-
-  - RAW 5 features only (x,y,heading,speed,accel) — NO engineered deltas, so the
-    recurrence must DISCOVER temporal consistency itself.
-  - In-order snapshots + truncated BPTT over windows of K: the GRU hidden weight
-    W flows WITH gradient across the window (reset at window start so initial_weight
-    -- a real Parameter -- is the learned seed). This actually trains the recurrence
-    (the vendored cell froze it via `self.weight = initial_weight.data`).
-  - De-saturated wide head + focal loss (the levers we know matter).
-
-Compare `evolve` (EvolveGCN-H recurrence) vs `static` (same head, no recurrence),
-both on RAW features. If evolve(raw) climbs toward static(engineered) [MCC ~0.77
-disjoint / ~0.95 temporal from run_augmented], the ST-GNN earns its place.
-
-Run:  python run_stgnn.py <evolve|static> [epochs] [window] [hidden]
-"""
+"""Spatio-temporal GNN training with in-order windowed truncated BPTT on raw kinematic features."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")

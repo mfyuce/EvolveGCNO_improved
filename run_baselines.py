@@ -1,17 +1,4 @@
-"""Honest baselines on the SAME data/split/features/head as desat EvolveGCN.
-
-Answers the paper's central claim — does the graph / temporal structure help?
-
-  mlp : per-node MLP on the 5 kinematic features, NO edges at all.
-  gcn : static GCN (edge_index + edge_weight), NO temporal recurrence.
-
-Compared against desat EvolveGCN (ROC-AUC 0.98, MCC 0.44) from run_experiments.
-All share: 5 standardized features, full-batch class-weighted CE, Adam lr=0.01,
-150 epochs, de-saturated ReLU head (hidden=16), identical eval (ROC/PR + best-MCC
-threshold sweep).
-
-Run:  python run_baselines.py <mlp|gcn> [epochs]
-"""
+"""MLP and static-GCN baselines on the kinematic node features."""
 
 import os, sys, time
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")
