@@ -1,0 +1,38 @@
+=== RESULTS Sat Jun 13 16:48:42 UTC 2026 ===
+FINAL[expA_gconvgru_eng10_s0] ROC-AUC=0.9923 PR-AUC=0.8772 MCC=0.776@thr0.48 P=0.765 R=0.809 F1mal=0.786 macroF1=0.888 | 7.0min
+FINAL[expA_gconvgru_eng10_s1] ROC-AUC=0.9945 PR-AUC=0.8355 MCC=0.882@thr0.85 P=0.900 R=0.867 F1mal=0.883 macroF1=0.941 | 7.1min
+FINAL[expA_gconvgru_eng10_s2] ROC-AUC=0.9924 PR-AUC=0.9297 MCC=0.876@thr0.65 P=0.870 R=0.892 F1mal=0.881 macroF1=0.938 | 7.1min
+FINAL[expA_gconvgru_eng10_s3] ROC-AUC=0.9958 PR-AUC=0.9292 MCC=0.888@thr0.95 P=0.925 R=0.864 F1mal=0.893 macroF1=0.944 | 7.0min
+FINAL[expA_gconvgru_eng10_s4] ROC-AUC=0.9831 PR-AUC=0.7860 MCC=0.784@thr0.75 P=0.876 R=0.714 F1mal=0.787 macroF1=0.890 | 7.1min
+FINAL[expA_gconvgru_eng8nopos_s0] ROC-AUC=0.9832 PR-AUC=0.9203 MCC=0.883@thr0.55 P=0.911 R=0.866 F1mal=0.888 macroF1=0.941 | 6.4min
+FINAL[expA_gconvgru_eng8nopos_s1] ROC-AUC=0.9545 PR-AUC=0.6188 MCC=0.645@thr0.85 P=0.870 R=0.484 F1mal=0.622 macroF1=0.809 | 6.6min
+FINAL[expA_gconvgru_eng8nopos_s2] ROC-AUC=0.9871 PR-AUC=0.8336 MCC=0.775@thr0.70 P=0.924 R=0.661 F1mal=0.771 macroF1=0.882 | 6.6min
+FINAL[expA_gconvgru_eng8nopos_s3] ROC-AUC=0.9044 PR-AUC=0.6827 MCC=0.713@thr0.93 P=0.845 R=0.625 F1mal=0.718 macroF1=0.852 | 6.5min
+FINAL[expA_gconvgru_eng8nopos_s4] ROC-AUC=0.9629 PR-AUC=0.7467 MCC=0.671@thr0.30 P=0.572 R=0.817 F1mal=0.673 macroF1=0.829 | 6.5min
+FINAL[expA_gconvgru_raw5_s0] ROC-AUC=0.9900 PR-AUC=0.8742 MCC=0.796@thr0.50 P=0.837 R=0.774 F1mal=0.805 macroF1=0.898 | 6.3min
+FINAL[expA_gconvgru_raw5_s3] ROC-AUC=0.9823 PR-AUC=0.8023 MCC=0.744@thr0.60 P=0.862 R=0.664 F1mal=0.750 macroF1=0.868 | 6.4min
+RESULT expC mode=gnn_edge seed=0 mcc=76.76 auc=0.9854 malf1=77.86 macrof1=88.37 in_f=15 (8.4min)
+RESULT expC mode=gnn_edge seed=1 mcc=89.32 auc=0.9949 malf1=89.48 macrof1=94.65 in_f=15 (8.3min)
+RESULT expC mode=gnn_edge seed=2 mcc=81.10 auc=0.9911 malf1=81.74 macrof1=90.54 in_f=15 (8.7min)
+RESULT expC mode=gnn_edge seed=3 mcc=86.92 auc=0.9941 malf1=87.66 macrof1=93.45 in_f=15 (8.3min)
+RESULT expC mode=gnn_edge seed=4 mcc=85.09 auc=0.9712 malf1=85.58 macrof1=92.54 in_f=15 (8.1min)
+RESULT expC mode=gnn_rel seed=0 mcc=93.56 auc=0.9967 malf1=93.76 macrof1=96.73 in_f=15 (6.5min)
+RESULT expC mode=gnn_rel seed=1 mcc=75.59 auc=0.9958 malf1=75.94 macrof1=87.78 in_f=15 (6.5min)
+RESULT expC mode=gnn_rel seed=2 mcc=92.23 auc=0.9961 malf1=92.26 macrof1=96.00 in_f=15 (6.6min)
+RESULT expC mode=gnn_rel seed=3 mcc=82.82 auc=0.9940 malf1=83.58 macrof1=91.33 in_f=15 (6.5min)
+RESULT expC mode=gnn_rel seed=4 mcc=82.99 auc=0.9924 malf1=82.98 macrof1=91.23 in_f=15 (6.6min)
+RESULT expC mode=rf_eng seed=0 mcc=73.10 auc=0.8984 malf1=74.10 macrof1=86.46 in_f=10 (0.7min)
+RESULT expC mode=rf_eng seed=1 mcc=90.12 auc=0.9773 malf1=90.27 macrof1=95.06 in_f=10 (0.7min)
+RESULT expC mode=rf_eng seed=2 mcc=68.87 auc=0.9106 malf1=67.79 macrof1=83.43 in_f=10 (0.7min)
+RESULT expC mode=rf_eng seed=3 mcc=83.90 auc=0.9255 malf1=84.12 macrof1=91.63 in_f=10 (0.8min)
+RESULT expC mode=rf_eng seed=4 mcc=68.61 auc=0.9418 malf1=66.69 macrof1=82.90 in_f=10 (0.7min)
+RESULT expC mode=rf_rel seed=0 mcc=78.32 auc=0.9766 malf1=79.29 macrof1=89.11 in_f=15 (0.7min)
+RESULT expC mode=rf_rel seed=1 mcc=86.60 auc=0.9924 malf1=86.81 macrof1=93.30 in_f=15 (0.7min)
+RESULT expC mode=rf_rel seed=2 mcc=76.31 auc=0.9830 malf1=77.11 macrof1=88.15 in_f=15 (0.7min)
+RESULT expC mode=rf_rel seed=3 mcc=85.28 auc=0.9814 malf1=85.68 macrof1=92.45 in_f=15 (0.7min)
+RESULT expC mode=rf_rel seed=4 mcc=78.20 auc=0.9849 malf1=78.88 macrof1=89.09 in_f=15 (0.7min)
+RESULT hybrid featset=eng10 seed=0 gnn_mcc=77.58 hgb_mcc=77.84 hgb_auc=0.9831 hgb_malf1=78.88 rf_mcc=77.61 rf_auc=0.9706 rf_malf1=78.64 feat=43 (7.6min)
+RESULT hybrid featset=eng10 seed=1 gnn_mcc=88.16 hgb_mcc=89.33 hgb_auc=0.9954 hgb_malf1=89.51 rf_mcc=89.12 rf_auc=0.9947 rf_malf1=89.29 feat=43 (7.7min)
+RESULT hybrid featset=eng10 seed=2 gnn_mcc=87.65 hgb_mcc=82.30 hgb_auc=0.9865 hgb_malf1=82.57 rf_mcc=80.13 rf_auc=0.9862 rf_malf1=80.28 feat=43 (7.5min)
+RESULT hybrid featset=eng10 seed=3 gnn_mcc=88.79 hgb_mcc=89.51 hgb_auc=0.9944 hgb_malf1=90.02 rf_mcc=89.75 rf_auc=0.9937 rf_malf1=90.34 feat=43 (7.6min)
+RESULT hybrid featset=eng10 seed=4 gnn_mcc=78.44 hgb_mcc=74.35 hgb_auc=0.8754 hgb_malf1=73.71 rf_mcc=80.18 rf_auc=0.9787 rf_malf1=80.04 feat=43 (7.3min)
